@@ -2,6 +2,8 @@
 
 (c) 2016–2021 Ilmari Heikkinen, Fredrick R. Brennan. As with Zstd itself, this is dual-licensed under [BSD](LICENSE) and [GPLv2](COPYING).
 
+**You can download `zstd.wasm` and `zstd.js` from the releases page: <https://github.com/ctrlcctrlv/zstd-emscripten/releases>**
+
 This build is based on facebook/zstd as of 20 November 2021 and provides two functions: `ZStdCompress` and `ZStdDecompress`. Please see `emscripten/test/index.html` for a usage example.
 
 Thanks to Ilmari Heikkinen, @kig, for their initial work on the CMake build. See commit [568bc158950234ceba8e917b6d69285984389249](https://github.com/ctrlcctrlv/zstd-emscripten/commit/568bc158950234ceba8e917b6d69285984389249) for my update.
