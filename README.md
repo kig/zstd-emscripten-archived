@@ -1,11 +1,15 @@
 # Zstd Emscripten build
 
-Warning: very rough first pass port. Missing all but the most basic functionality.
+(c) 2016–2021 Ilmari Heikkinen, Fredrick R. Brennan. As with Zstd itself, this is dual-licensed under [BSD](LICENSE) and [GPLv2](COPYING).
+
+This build is based on facebook/zstd as of 20 November 2021 and provides two functions: `ZStdCompress` and `ZStdDecompress`. Please see `emscripten/test/index.html` for a usage example.
+
+Thanks to Ilmari Heikkinen, @kig, for their initial work on the CMake build. See commit [568bc158950234ceba8e917b6d69285984389249](https://github.com/ctrlcctrlv/zstd-emscripten/commit/568bc158950234ceba8e917b6d69285984389249) for my update.
 
 ## To build:
 
   1. `cd build`
-  2. `emconfigure cmake ../contrib/cmake/`
+  2. `emcmake cmake ../contrib/cmake/`
   3. `emmake make -j4`
   4. `cd ..`
   5. `serve -p 3000`
