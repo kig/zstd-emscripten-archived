@@ -31,7 +31,7 @@
 #  - Public forum : https://groups.google.com/forum/#!forum/lz4c
 # ################################################################
 
-PROJECT(emscripten)
+PROJECT(programs)
 
 SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
@@ -39,8 +39,8 @@ SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 SET(ROOT_DIR ../../..)
 
 # Define programs directory, where sources and header files are located
-SET(EMSCRIPTEN_DIR ${ROOT_DIR}/emscripten)
-INCLUDE_DIRECTORIES(${EMSCRIPTEN_DIR})
+SET(PROGRAMS_DIR ${ROOT_DIR}/programs)
+INCLUDE_DIRECTORIES(${PROGRAMS_DIR})
 
 IF (WORKAROUND_OUTDATED_CODE_STYLE)
     # Define library directory, where sources and header files are located
@@ -48,27 +48,37 @@ IF (WORKAROUND_OUTDATED_CODE_STYLE)
     INCLUDE_DIRECTORIES(${LIBRARY_DIR})
 ENDIF (WORKAROUND_OUTDATED_CODE_STYLE)
 
-#IF (ZSTD_LEGACY_SUPPORT)
-#    SET(PROGRAMS_LEGACY_DIR ${PROGRAMS_DIR}/legacy)
-#    INCLUDE_DIRECTORIES(${PROGRAMS_LEGACY_DIR})
-#
-#   IF (WORKAROUND_OUTDATED_CODE_STYLE)
-#        INCLUDE_DIRECTORIES(${LIBRARY_DIR}/legacy)
-#    ENDIF (WORKAROUND_OUTDATED_CODE_STYLE)
-#
-#    SET(ZSTD_FILEIO_LEGACY ${PROGRAMS_LEGACY_DIR}/fileio_legacy.c)
-#ENDIF (ZSTD_LEGACY_SUPPORT)
+IF (ZSTD_LEGACY_SUPPORT)
+    SET(PROGRAMS_LEGACY_DIR ${PROGRAMS_DIR}/legacy)
+    INCLUDE_DIRECTORIES(${PROGRAMS_LEGACY_DIR})
 
-if (EMSCRIPTEN)
-    set(CMAKE_AR "emcc")
-    set(CMAKE_STATIC_LIBRARY_SUFFIX ".bc")
-    set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
-    set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
-endif()
+    IF (WORKAROUND_OUTDATED_CODE_STYLE)
+        INCLUDE_DIRECTORIES(${LIBRARY_DIR}/legacy)
+    ENDIF (WORKAROUND_OUTDATED_CODE_STYLE)
 
-set(CMAKE_C_FLAGS "--bind -O0 -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_malloc','_free','_realloc']\"")
-set(EMCC_CFLAGS "--bind -O0 -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_malloc','_free','_realloc']\"")
+    SET(ZSTD_FILEIO_LEGACY ${PROGRAMS_LEGACY_DIR}/fileio_legacy.c)
+ENDIF (ZSTD_LEGACY_SUPPORT)
 
-ADD_EXECUTABLE(zstd ${EMSCRIPTEN_DIR}/zstd.js.c)
+ADD_EXECUTABLE(zstd ${PROGRAMS_DIR}/zstdcli.c ${PROGRAMS_DIR}/fileio.c ${PROGRAMS_DIR}/bench.c ${PROGRAMS_DIR}/xxhash.c ${PROGRAMS_DIR}/datagen.c ${ZSTD_FILEIO_LEGACY})
 TARGET_LINK_LIBRARIES(zstd libzstd_static)
 
+ADD_EXECUTABLE(fullbench ${PROGRAMS_DIR}/datagen.c ${PROGRAMS_DIR}/fullbench.c)
+TARGET_LINK_LIBRARIES(fullbench libzstd_static)
+
+ADD_EXECUTABLE(fuzzer ${PROGRAMS_DIR}/datagen.c ${PROGRAMS_DIR}/xxhash.c ${PROGRAMS_DIR}/fuzzer.c)
+TARGET_LINK_LIBRARIES(fuzzer libzstd_static)
+
+IF (UNIX)
+    ADD_EXECUTABLE(zstd-noBench ${PROGRAMS_DIR}/zstdcli.c ${PROGRAMS_DIR}/fileio.c ${ZSTD_FILEIO_LEGACY})
+    TARGET_LINK_LIBRARIES(zstd-noBench libzstd_static)
+    SET_TARGET_PROPERTIES(zstd-noBench PROPERTIES COMPILE_DEFINITIONS "ZSTD_NOBENCH")
+
+    ADD_EXECUTABLE(zbufftest ${PROGRAMS_DIR}/datagen.c ${PROGRAMS_DIR}/xxhash.c ${PROGRAMS_DIR}/zbufftest.c)
+    TARGET_LINK_LIBRARIES(zbufftest libzstd_static)
+
+    ADD_EXECUTABLE(paramgrill ${PROGRAMS_DIR}/datagen.c ${PROGRAMS_DIR}/xxhash.c ${PROGRAMS_DIR}/paramgrill.c)
+    TARGET_LINK_LIBRARIES(paramgrill libzstd_static m) #m is math library
+
+    ADD_EXECUTABLE(datagen ${PROGRAMS_DIR}/datagen.c ${PROGRAMS_DIR}/datagencli.c)
+    TARGET_LINK_LIBRARIES(datagen libzstd_static)
+ENDIF (UNIX)
