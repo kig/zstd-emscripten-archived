@@ -66,9 +66,6 @@ if (EMSCRIPTEN)
     set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
 endif()
 
-set(CMAKE_C_FLAGS "--bind -O0 -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_malloc','_free','_realloc']\"")
-set(EMCC_CFLAGS "--bind -O0 -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_malloc','_free','_realloc']\"")
-
-ADD_EXECUTABLE(zstd ${EMSCRIPTEN_DIR}/zstd.js.c)
-TARGET_LINK_LIBRARIES(zstd libzstd_static)
-
+ADD_SUBDIRECTORY(zstd)
+ADD_SUBDIRECTORY(zstd_compress)
+ADD_SUBDIRECTORY(zstd_decompress)
