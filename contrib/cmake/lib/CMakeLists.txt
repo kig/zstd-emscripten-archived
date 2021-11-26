@@ -58,26 +58,78 @@ GetLibraryVersion("${HEADER_CONTENT}" LIBVER_MAJOR LIBVER_MINOR LIBVER_RELEASE)
 MESSAGE("ZSTD VERSION ${LIBVER_MAJOR}.${LIBVER_MINOR}.${LIBVER_RELEASE}")
 
 SET(Sources
-        ${LIBRARY_DIR}/fse.c
-        ${LIBRARY_DIR}/huff0.c
-        ${LIBRARY_DIR}/zstd_buffered.c
-        ${LIBRARY_DIR}/zstd_compress.c
-        ${LIBRARY_DIR}/zstd_decompress.c)
+${LIBRARY_DIR}/common/debug.c
+${LIBRARY_DIR}/common/entropy_common.c
+${LIBRARY_DIR}/common/error_private.c
+${LIBRARY_DIR}/common/fse_decompress.c
+${LIBRARY_DIR}/common/pool.c
+${LIBRARY_DIR}/common/threading.c
+${LIBRARY_DIR}/common/xxhash.c
+${LIBRARY_DIR}/common/zstd_common.c
+${LIBRARY_DIR}/compress/fse_compress.c
+${LIBRARY_DIR}/compress/hist.c
+${LIBRARY_DIR}/compress/huf_compress.c
+${LIBRARY_DIR}/compress/zstd_compress.c
+${LIBRARY_DIR}/compress/zstd_compress_literals.c
+${LIBRARY_DIR}/compress/zstd_compress_sequences.c
+${LIBRARY_DIR}/compress/zstd_compress_superblock.c
+${LIBRARY_DIR}/compress/zstd_double_fast.c
+${LIBRARY_DIR}/compress/zstd_fast.c
+${LIBRARY_DIR}/compress/zstd_lazy.c
+${LIBRARY_DIR}/compress/zstd_ldm.c
+${LIBRARY_DIR}/compress/zstd_opt.c
+${LIBRARY_DIR}/compress/zstdmt_compress.c
+${LIBRARY_DIR}/decompress/huf_decompress.c
+${LIBRARY_DIR}/decompress/zstd_ddict.c
+${LIBRARY_DIR}/decompress/zstd_decompress.c
+${LIBRARY_DIR}/decompress/zstd_decompress_block.c
+${LIBRARY_DIR}/deprecated/zbuff_common.c
+${LIBRARY_DIR}/deprecated/zbuff_compress.c
+${LIBRARY_DIR}/deprecated/zbuff_decompress.c
+${LIBRARY_DIR}/dictBuilder/cover.c
+${LIBRARY_DIR}/dictBuilder/divsufsort.c
+${LIBRARY_DIR}/dictBuilder/fastcover.c
+${LIBRARY_DIR}/dictBuilder/zdict.c
+)
 
 SET(Headers
-        ${LIBRARY_DIR}/bitstream.h
-        ${LIBRARY_DIR}/error_private.h
-        ${LIBRARY_DIR}/error_public.h
-        ${LIBRARY_DIR}/fse.h
-        ${LIBRARY_DIR}/fse_static.h
-        ${LIBRARY_DIR}/huff0.h
-        ${LIBRARY_DIR}/huff0_static.h
-        ${LIBRARY_DIR}/mem.h
-        ${LIBRARY_DIR}/zstd_buffered_static.h
-        ${LIBRARY_DIR}/zstd_buffered.h
-        ${LIBRARY_DIR}/zstd_internal.h
-        ${LIBRARY_DIR}/zstd_static.h
-        ${LIBRARY_DIR}/zstd.h)
+${LIBRARY_DIR}/common/bitstream.h
+${LIBRARY_DIR}/common/compiler.h
+${LIBRARY_DIR}/common/cpu.h
+${LIBRARY_DIR}/common/debug.h
+${LIBRARY_DIR}/common/error_private.h
+${LIBRARY_DIR}/common/fse.h
+${LIBRARY_DIR}/common/huf.h
+${LIBRARY_DIR}/common/mem.h
+${LIBRARY_DIR}/common/pool.h
+${LIBRARY_DIR}/common/threading.h
+${LIBRARY_DIR}/common/xxhash.h
+${LIBRARY_DIR}/common/zstd_deps.h
+${LIBRARY_DIR}/common/zstd_internal.h
+${LIBRARY_DIR}/common/zstd_trace.h
+${LIBRARY_DIR}/compress/clevels.h
+${LIBRARY_DIR}/compress/hist.h
+${LIBRARY_DIR}/compress/zstd_compress_internal.h
+${LIBRARY_DIR}/compress/zstd_compress_literals.h
+${LIBRARY_DIR}/compress/zstd_compress_sequences.h
+${LIBRARY_DIR}/compress/zstd_compress_superblock.h
+${LIBRARY_DIR}/compress/zstd_cwksp.h
+${LIBRARY_DIR}/compress/zstd_double_fast.h
+${LIBRARY_DIR}/compress/zstd_fast.h
+${LIBRARY_DIR}/compress/zstd_lazy.h
+${LIBRARY_DIR}/compress/zstd_ldm.h
+${LIBRARY_DIR}/compress/zstd_ldm_geartab.h
+${LIBRARY_DIR}/compress/zstd_opt.h
+${LIBRARY_DIR}/compress/zstdmt_compress.h
+${LIBRARY_DIR}/decompress/zstd_ddict.h
+${LIBRARY_DIR}/decompress/zstd_decompress_block.h
+${LIBRARY_DIR}/decompress/zstd_decompress_internal.h
+${LIBRARY_DIR}/deprecated/zbuff.h
+${LIBRARY_DIR}/dictBuilder/cover.h
+${LIBRARY_DIR}/dictBuilder/divsufsort.h
+${LIBRARY_DIR}/zdict.h
+${LIBRARY_DIR}/zstd_errors.h
+${LIBRARY_DIR}/zstd.h)
 
 IF (ZSTD_LEGACY_SUPPORT)
     SET(LIBRARY_LEGACY_DIR ${LIBRARY_DIR}/legacy)
@@ -194,13 +246,4 @@ IF (UNIX)
 
     INSTALL(FILES ${SHARED_LIBRARY_SYMLINK1_PATH} DESTINATION ${INSTALL_LIBRARY_DIR})
     INSTALL(FILES ${SHARED_LIBRARY_SYMLINK2_PATH} DESTINATION ${INSTALL_LIBRARY_DIR})
-
-    # uninstall target
-    CONFIGURE_FILE(
-            "${CMAKE_SOURCE_DIR}/cmake_uninstall.cmake.in"
-            "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-            IMMEDIATE @ONLY)
-
-    ADD_CUSTOM_TARGET(uninstall
-            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake)
 ENDIF (UNIX)

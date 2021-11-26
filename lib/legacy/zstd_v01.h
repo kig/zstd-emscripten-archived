@@ -1,36 +1,15 @@
 /*
-    zstd - standard compression library
-    Header File
-    Copyright (C) 2014-2015, Yann Collet.
+ * Copyright (c) Yann Collet, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under both the BSD-style license (found in the
+ * LICENSE file in the root directory of this source tree) and the GPLv2 (found
+ * in the COPYING file in the root directory of this source tree).
+ * You may select, at your option, one of the above-listed licenses.
+ */
 
-    BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are
-    met:
-    * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-    You can contact the author at :
-    - zstd source repository : https://github.com/Cyan4973/zstd
-    - ztsd public forum : https://groups.google.com/forum/#!forum/lz4c
-*/
-#pragma once
+#ifndef ZSTD_V01_H_28739879432
+#define ZSTD_V01_H_28739879432
 
 #if defined (__cplusplus)
 extern "C" {
@@ -55,6 +34,19 @@ ZSTDv01_decompress() : decompress ZSTD frames compliant with v0.1.x format
 */
 size_t ZSTDv01_decompress( void* dst, size_t maxOriginalSize,
                      const void* src, size_t compressedSize);
+
+ /**
+ ZSTDv01_findFrameSizeInfoLegacy() : get the source length and decompressed bound of a ZSTD frame compliant with v0.1.x format
+     srcSize : The size of the 'src' buffer, at least as large as the frame pointed to by 'src'
+     cSize (output parameter)  : the number of bytes that would be read to decompress this frame
+                                 or an error code if it fails (which can be tested using ZSTDv01_isError())
+     dBound (output parameter) : an upper-bound for the decompressed size of the data in the frame
+                                 or ZSTD_CONTENTSIZE_ERROR if an error occurs
+
+     note : assumes `cSize` and `dBound` are _not_ NULL.
+ */
+void ZSTDv01_findFrameSizeInfoLegacy(const void *src, size_t srcSize,
+                                     size_t* cSize, unsigned long long* dBound);
 
 /**
 ZSTDv01_isError() : tells if the result of ZSTDv01_decompress() is an error
@@ -98,3 +90,5 @@ size_t ZSTDv01_decompressContinue(ZSTDv01_Dctx* dctx, void* dst, size_t maxDstSi
 #if defined (__cplusplus)
 }
 #endif
+
+#endif /* ZSTD_V01_H_28739879432 */
