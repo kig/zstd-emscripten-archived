@@ -1,6 +1,0 @@
-ADD_EXECUTABLE(zstd_compress ${EMSCRIPTEN_DIR}/zstd_compress.js.c)
-TARGET_LINK_LIBRARIES(zstd_compress libzstd_static)
-SET(CFLAGS_C "--bind -Os -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_malloc']\"")
-SET(CMAKE_C_FLAGS ${CFLAGS_C})
-SET(EMCC_CFLAGS ${CFLAGS_C})
-SET_TARGET_PROPERTIES(zstd_compress PROPERTIES COMPILE_FLAGS ${CFLAGS_C})

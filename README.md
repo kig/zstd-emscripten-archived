@@ -10,16 +10,19 @@ Thanks to Ilmari Heikkinen, @kig, for their initial work on the CMake build. See
 
 ## To build:
 
-  1. `cd build`
-  2. `emcmake cmake ../contrib/cmake/`
-  3. `emmake make -j4`
-  4. `cd ..`
-  5. `serve -p 3000`
-  6. `open http://localhost:3000/emscripten/test/index.html`
+```bash
+git clone https://github.com/kig/zstd-emscripten && cd zstd-emscripten &&
+git clone https://github.com/emscripten-core/emsdk.git && cd emsdk && ./emsdk install latest && source ./emsdk_env.sh && cd .. &&
+cd build && emcmake cmake ../contrib/cmake/ && emmake make -j4 && cd .. &&
+serve -p 5000
+# open http://localhost:5000/emscripten/test/index.html
+```
 
 ## To use:
 
 See the [test page](emscripten/test/index.html).
+
+# ZStd README
 
 __Zstandard__, or `zstd` as short version, is a fast lossless compression algorithm,
 targeting real-time compression scenarios at zlib-level and better compression ratios.
