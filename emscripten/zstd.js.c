@@ -62,7 +62,7 @@ extern "C" {
 	}
 
 	size_t ZStdCompressStreamContinue() {
-        output.pos = 0;
+		output.pos = 0;
 		remaining = ZSTD_compressStream2(cctx, &output, &input, mode);
 		return output.pos;
 	}
@@ -105,7 +105,7 @@ extern "C" {
 	}
 
 	size_t ZStdDecompressStreamContinue() {
-        doutput.pos = 0;
+		doutput.pos = 0;
 		size_t const ret = ZSTD_decompressStream(dctx, &doutput, &dinput);
 		return doutput.pos;
 	}
