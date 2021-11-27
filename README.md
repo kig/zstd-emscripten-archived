@@ -2,7 +2,7 @@
 
 **You can download `zstd.wasm` and `zstd.js` from the releases page: <https://github.com/ctrlcctrlv/zstd-emscripten/releases>**
 
-This build is based on facebook/zstd as of 20 November 2021 and provides two functions: `ZStdCompress` and `ZStdDecompress`. Please see `emscripten/test/index.html` for a usage example.
+This build is based on facebook/zstd as of 20 November 2021 and provides two functions: `ZStdCompress` and `ZStdDecompress`. Please see [emscripten/test/index.html](https://kig.github.io/zstd-emscripten/) for a demo and usage example.
 
 Now with streaming compression and decompression, and an optimized build size. Uncompressed WASM is 242 kB, gzip 83 kB, brotli 68 kB.
 
