@@ -78,6 +78,42 @@ extern "C" {
 
 	// Streaming decompression
 
+	static size_t const dbuffInSize = ZSTD_BLOCKSIZE_MAX + 3;
+	static size_t const dbuffOutSize = ZSTD_BLOCKSIZE_MAX;
+	static char dbuffIn[dbuffInSize];
+	static char dbuffOut[dbuffOutSize];
+	static ZSTD_inBuffer dinput = { dbuffIn, dbuffInSize, 0 };
+	static ZSTD_outBuffer doutput = { dbuffOut, dbuffOutSize, 0 };
+	static ZSTD_DStream* dctx = NULL;
+
+	static size_t dbuffParams[4] = { dbuffInSize, (size_t)dbuffIn, dbuffOutSize, (size_t)dbuffOut };
+
+	size_t ZStdDecompressStreamStart() {
+		if (dctx == NULL) {
+			dctx = ZSTD_createDStream();
+		}
+		ZSTD_initDStream(dctx);
+		return (size_t)dbuffParams;
+	}
+
+	int ZStdDecompressStreamBlock(int blockBytes) {
+		if (blockBytes > dbuffInSize) return -1;
+		dinput.pos = 0;
+		doutput.pos = 0;
+		dinput.size = blockBytes;
+		return 0;
+	}
+
+	size_t ZStdDecompressStreamContinue() {
+        doutput.pos = 0;
+		size_t const ret = ZSTD_decompressStream(dctx, &doutput, &dinput);
+		return doutput.pos;
+	}
+
+	int ZStdDecompressStreamAtEnd() {
+		return dinput.pos == dinput.size;
+	}
+
 #if defined (__cplusplus)
 }
 #endif
