@@ -67,7 +67,7 @@ if (EMSCRIPTEN)
 endif()
 
 ADD_EXECUTABLE(zstd ${EMSCRIPTEN_DIR}/zstd.js.c)
-SET(CFLAGS_A "--bind -Oz -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_malloc']\"")
+SET(CFLAGS_A "--bind -Oz -s EXPORT_NAME=\"'ZStd'\" -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s DISABLE_EXCEPTION_CATCHING=1 --memory-init-file 0 -s EXPORTED_FUNCTIONS=\"['_ZStdCompress','_ZStdDecompress','_ZStdCompressStreamStart','_ZStdCompressStreamBlock','_ZStdCompressStreamContinue','_ZStdCompressStreamAtEnd','_malloc']\"")
 SET(CMAKE_C_FLAGS ${CFLAGS_A})
 SET(EMCC_CFLAGS ${CFLAGS_A})
 SET_TARGET_PROPERTIES(zstd PROPERTIES COMPILE_FLAGS ${CFLAGS_A})
