@@ -1,5 +1,7 @@
 # Zstd Emscripten build
 
+This repo is deprecated in favor of the full API WebAssembly binding at https://github.com/kig/zstd-emscripten/
+
 **You can download `zstd.wasm` and `zstd.js` from the releases page: <https://github.com/ctrlcctrlv/zstd-emscripten/releases>**
 
 This build is based on facebook/zstd as of 20 November 2021 and provides two functions: `ZStdCompress` and `ZStdDecompress`. Please see [emscripten/test/index.html](https://kig.github.io/zstd-emscripten/) for a demo and usage example.
